@@ -24,7 +24,7 @@ export async function chatWithAgent(history: Message[], message: string, authTok
         return await authContext.run({ token: authToken }, async () => {
             const response = await loanAgent(fullInput);
             return {
-                text: response.text,
+                text: typeof response === 'string' ? response : JSON.stringify(response),
             };
         });
     } catch (error) {
@@ -34,7 +34,7 @@ export async function chatWithAgent(history: Message[], message: string, authTok
             console.error('Error stack:', error.stack);
         }
         return {
-            text: "I'm sorry, I'm having trouble processing your request right now. Please try again later.",
+            text: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
         };
     }
 }

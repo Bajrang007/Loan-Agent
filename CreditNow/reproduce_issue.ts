@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import { chatWithAgent } from './src/app/actions';
 
 async function test() {

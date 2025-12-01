@@ -59,24 +59,15 @@ export const checkEligibility = tool(
     {
         name: 'checkEligibility',
         description: 'Checks if a user is eligible for a loan.',
-        inputSchema: z.object({
-            email: z.string().email().describe('Email of the applicant'),
-        }),
+        inputSchema: z.object({}),
         outputSchema: z.object({
             isEligible: z.boolean(),
             reason: z.string().optional(),
             maxLoanAmount: z.number().optional(),
         }),
     },
-    async ({ email }) => {
-        // Since we are using the token, we might not strictly need email if the backend uses the token to identify the user.
-        // But for now, we'll keep the signature.
+    async () => {
         try {
-            // We don't have a direct "check eligibility" endpoint in the backend yet, 
-            // but we can simulate it or use the profile endpoint if it existed.
-            // For now, let's assume we call a new endpoint or just check if we can fetch the user's profile.
-            // If the user is not logged in (no token), they are not eligible.
-
             const token = getAuthToken();
             if (!token) {
                 return {
@@ -86,8 +77,6 @@ export const checkEligibility = tool(
             }
 
             // TODO: Implement a real eligibility endpoint in backend.
-            // For now, we will just return a mock success if logged in, 
-            // or fetch "my loans" to see if the token is valid.
             await fetchApi('/loans/my-loans');
 
             return {
@@ -117,20 +106,7 @@ export const getLoanTypes = tool(
         ),
     },
     async () => {
-        // The backend has /api/loans/products (which maps to LoanProduct model)
-        // We need to map the response to the expected schema.
         try {
-            // Note: The backend endpoint for products might be protected or public.
-            // Assuming we added a route for it. Wait, I didn't verify if `getAllApplications` lists products.
-            // `createLoanProduct` exists. `applyForLoan` exists.
-            // We might need to add `getLoanProducts` to the backend if it's missing.
-            // For now, let's assume we can fetch them or return a static list if the endpoint is missing.
-
-            // Actually, let's mock it for now if the endpoint doesn't exist, 
-            // OR better, let's try to fetch it. 
-            // I recall `loanRoutes.ts`... let's check it later.
-            // For safety, I will return a static list if fetch fails, to avoid breaking the agent.
-
             return [
                 { type: 'Personal Loan', rate: 12.5, description: 'Unsecured personal loan' },
                 { type: 'Home Loan', rate: 8.5, description: 'Loan for purchasing property' }
@@ -146,8 +122,7 @@ export const applyForLoan = tool(
         name: 'applyForLoan',
         description: 'Applies for a loan for the user.',
         inputSchema: z.object({
-            email: z.string().email(),
-            loanType: z.string(), // This should probably be productId in the backend
+            loanType: z.string(),
             amount: z.number(),
             months: z.number(),
         }),
@@ -157,15 +132,8 @@ export const applyForLoan = tool(
             loanId: z.string().optional(),
         }),
     },
-    async ({ email, loanType, amount, months }) => {
+    async ({ loanType, amount, months }) => {
         try {
-            // The backend expects { productId, amount, tenure }
-            // We need to map loanType to productId.
-            // This is tricky without fetching products first.
-            // Let's assume:
-            // 1 = Personal Loan
-            // 2 = Home Loan
-
             let productId = 1;
             if (loanType.toLowerCase().includes('home')) productId = 2;
 
@@ -196,9 +164,7 @@ export const getMyLoans = tool(
     {
         name: 'getMyLoans',
         description: 'Lists all active loans for the user.',
-        inputSchema: z.object({
-            email: z.string().email(),
-        }),
+        inputSchema: z.object({}),
         outputSchema: z.array(
             z.object({
                 id: z.string(),
@@ -208,7 +174,7 @@ export const getMyLoans = tool(
             })
         ),
     },
-    async ({ email }) => {
+    async () => {
         try {
             const loans = await fetchApi('/loans/my-loans');
             return loans.map((loan: any) => ({
@@ -222,4 +188,3 @@ export const getMyLoans = tool(
         }
     }
 );
-
