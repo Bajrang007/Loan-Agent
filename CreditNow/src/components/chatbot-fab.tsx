@@ -45,7 +45,9 @@ export function ChatbotFab() {
     setIsLoading(true);
 
     try {
-      const response = await chatWithAgent(messages, input);
+      // Retrieve token from localStorage (assuming it's stored there after login)
+      const token = localStorage.getItem('token');
+      const response = await chatWithAgent(messages, input, token);
       const botMessage: Message = { role: 'model', content: response.text };
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {

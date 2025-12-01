@@ -7,7 +7,9 @@ export interface Message {
     content: string;
 }
 
-export async function chatWithAgent(history: Message[], message: string) {
+import { authContext } from '@/ai/context';
+
+export async function chatWithAgent(history: Message[], message: string, authToken: string | null = null) {
     // Construct a prompt that includes history context
     const historyText = history.map(m => `${m.role}: ${m.content}`).join('\n');
     const fullInput = `
@@ -18,10 +20,13 @@ export async function chatWithAgent(history: Message[], message: string) {
   `;
 
     try {
-        const response = await loanAgent(fullInput);
-        return {
-            text: response.text,
-        };
+        // Run the agent within the auth context
+        return await authContext.run({ token: authToken }, async () => {
+            const response = await loanAgent(fullInput);
+            return {
+                text: response.text,
+            };
+        });
     } catch (error) {
         console.error('Error calling agent:', error);
         if (error instanceof Error) {
