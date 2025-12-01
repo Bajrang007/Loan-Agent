@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum DocStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum LoanStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  DISBURSED
+  CLOSED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  LATE
+}
+
+enum PaymentMethod {
+  CARD
+  UPI
+  NETBANKING
+}
+
+enum AdminActionType {
+  APPROVE
+  REJECT
+  VERIFY_DOCUMENT
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  phone        String?   @unique
+  passwordHash String
+  dob          DateTime?
+  address      String?   @db.Text
+  role         Role      @default(USER)
+  createdAt    DateTime  @default(now())
+  
+  documents    UserDocument[]
+  loans        LoanApplication[]
+  adminActions AdminAction[]
+}
+
+model UserDocument {
+  id           Int       @id @default(autoincrement())
+  userId       Int
+  user         User      @relation(fields: [userId], references: [id])
+  documentType String
+  documentUrl  String
+  status       DocStatus @default(PENDING)
+  uploadedAt   DateTime  @default(now())
+}
+
+model LoanProduct {
+  id            Int               @id @default(autoincrement())
+  title         String
+  description   String?           @db.Text
+  interestRate  Decimal
+  maxAmount     Decimal
+  minAmount     Decimal
+  tenureMonths  Int
+  
+  applications  LoanApplication[]
+}
+
+model LoanApplication {
+  id           Int            @id @default(autoincrement())
+  userId       Int
+  user         User           @relation(fields: [userId], references: [id])
+  productId    Int
+  product      LoanProduct    @relation(fields: [productId], references: [id])
+  amount       Decimal
+  tenure       Int
+  interestRate Decimal
+  status       LoanStatus     @default(PENDING)
+  appliedAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  
+  repayments   LoanRepayment[]
+  adminActions AdminAction[]
+}
+
+model LoanRepayment {
+  id            Int           @id @default(autoincrement())
+  loanId        Int
+  loan          LoanApplication @relation(fields: [loanId], references: [id])
+  dueDate       DateTime
+  amountDue     Decimal
+  amountPaid    Decimal       @default(0)
+  paymentStatus PaymentStatus @default(PENDING)
+  paidAt        DateTime?
+  
+  payments      Payment[]
+}
+
+model Payment {
+  id            Int           @id @default(autoincrement())
+  repaymentId   Int
+  repayment     LoanRepayment @relation(fields: [repaymentId], references: [id])
+  transactionId String?
+  amount        Decimal
+  method        PaymentMethod?
+  status        String        @default("success") // or enum if needed
+  createdAt     DateTime      @default(now())
+}
+
+model AdminAction {
+  id        Int             @id @default(autoincrement())
+  adminId   Int
+  admin     User            @relation(fields: [adminId], references: [id])
+  loanId    Int?
+  loan      LoanApplication? @relation(fields: [loanId], references: [id])
+  action    AdminActionType
+  note      String?         @db.Text
+  createdAt DateTime        @default(now())
+}

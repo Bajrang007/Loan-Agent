@@ -1,0 +1,136 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero-image",
+      "description": "A happy person with a new car, representing financial freedom.",
+      "imageUrl": "https://images.unsplash.com/photo-1687975892982-45847c4fbdfe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxoYXBweSUyMHBlcnNvbiUyMGNhcnxlbnwwfHx8fDE3NjE4OTc4NDh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "happy person car"
+    },
+    {
+      "id": "two-wheeler-loan",
+      "description": "A modern scooter parked on a city street.",
+      "imageUrl": "https://images.unsplash.com/photo-1681765656650-e0c87babdfe6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxtb3RvcmN5Y2xlJTIwc2Nvb3RlcnxlbnwwfHx8fDE3NjE4OTc4NDh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "motorcycle scooter"
+    },
+    {
+      "id": "used-car-loan",
+      "description": "A person proudly standing next to their clean used car.",
+      "imageUrl": "https://images.unsplash.com/photo-1675310534327-1bdab1c9ae0f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx1c2VkJTIwY2FyfGVufDB8fHx8MTc2MTg5Nzg0OHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "used car"
+    },
+    {
+      "id": "tractor-loan",
+      "description": "A tractor in a field during a sunny day.",
+      "imageUrl": "https://images.unsplash.com/photo-1482941792858-55cfaf5afbe4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxmYXJtJTIwdHJhY3RvcnxlbnwwfHx8fDE3NjE4OTc4NDh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "farm tractor"
+    },
+    {
+      "id": "personal-loan",
+      "description": "A woman smiling, representing personal well-being.",
+      "imageUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx3b21hbiUyMHNtaWxpbmd8ZW58MHx8fHwxNzYxODg1MDQyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman smiling"
+    },
+    {
+      "id": "consumer-durable-loan",
+      "description": "A collection of modern home appliances.",
+      "imageUrl": "https://images.unsplash.com/photo-1597418048367-7dd01e4404ee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxob21lJTIwYXBwbGlhbmNlc3xlbnwwfHx8fDE3NjE4Nzc1OTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "home appliances"
+    },
+    {
+      "id": "offer-christmas",
+      "description": "A festive image celebrating Christmas.",
+      "imageUrl": "https://picsum.photos/id/1011/2070/1150",
+      "imageHint": "christmas festival"
+    },
+    {
+      "id": "offer-neckband",
+      "description": "A person wearing a neckband headphone.",
+      "imageUrl": "https://images.unsplash.com/photo-1619296794093-3df1ae6819a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHx3aXJlbGVzcyUyMGhlYWRwaG9uZXN8ZW58MHx8fHwxNzYxODg4MTAyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wireless headphones"
+    },
+    {
+      "id": "offer-movie",
+      "description": "Popcorn and tickets for a movie night.",
+      "imageUrl": "https://images.unsplash.com/photo-1478720568477-152d9b164e26?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxtb3ZpZSUyMG5pZ2h0fGVufDB8fHx8MTc2MTg4NDk0NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "movie night"
+    },
+    {
+      "id": "journey-background",
+      "description": "An abstract green background representing growth and journey.",
+      "imageUrl": "https://images.unsplash.com/photo-1588097247274-a174dd59f20d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxhYnN0cmFjdCUyMGdyZWVufGVufDB8fHx8MTc2MTg5ODUyNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "abstract green"
+    },
+    {
+      "id": "testimonial-1",
+      "description": "Portrait of Anand Ramasamy.",
+      "imageUrl": "https://images.unsplash.com/photo-1607031542107-f6f46b5d54e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjE4ODE5NTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "testimonial-2",
+      "description": "Portrait of Harak Singh.",
+      "imageUrl": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjE4ODE5NTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "testimonial-3",
+      "description": "Portrait of A Prakash.",
+      "imageUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjE4ODE5NTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "testimonial-4",
+      "description": "Portrait of Hema Dhage.",
+      "imageUrl": "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx3b21hbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc2MTgwMzQ2MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman portrait"
+    },
+    {
+      "id": "app-promo-image",
+      "description": "A smartphone showcasing the Saathi app.",
+      "imageUrl": "https://images.unsplash.com/photo-1730817403162-83d5094480ec?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxzbWFydHBob25lJTIwYXBwfGVufDB8fHx8MTc2MTg5ODUyN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "smartphone app"
+    },
+    {
+      "id": "instacard-loan",
+      "description": "A person holding a credit card.",
+      "imageUrl": "https://images.unsplash.com/photo-1609429019995-8c40f49535a5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjcmVkaXQlMjBjYXJkfGVufDB8fHx8MTc2MjA3ODQ1NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "credit card"
+    },
+    {
+      "id": "gold-loan",
+      "description": "A pile of gold coins.",
+      "imageUrl": "https://images.unsplash.com/photo-1624365168056-daf44387e2ae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxnb2xkJTIwY29pbnN8ZW58MHx8fHwxNzYyMTUyNzU5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gold coins"
+    },
+    {
+      "id": "used-commercial-vehicle-loan",
+      "description": "A commercial truck on the road.",
+      "imageUrl": "https://images.unsplash.com/photo-1760662052295-f84068499a03?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxjb21tZXJjaWFsJTIwdHJ1Y2t8ZW58MHx8fHwxNzYyMTI0NzM2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "commercial truck"
+    },
+    {
+      "id": "loan-against-property",
+      "description": "A house with a for sale sign.",
+      "imageUrl": "https://images.unsplash.com/photo-1629584603667-e8ad7c8feb0b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxob3VzZSUyMHByb3BlcnR5fGVufDB8fHx8MTc2MjE1NDc1OHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "house property"
+    },
+    {
+      "id": "business-loan",
+      "description": "A person working on a laptop in an office.",
+      "imageUrl": "https://images.unsplash.com/photo-1541746972996-4e0b0f43e02a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMG9mZmljZXxlbnwwfHx8fDE3NjIxMjM0ODN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "business office"
+    },
+    {
+      "id": "three-wheeler-loan",
+      "description": "An auto-rickshaw on a city street.",
+      "imageUrl": "https://images.unsplash.com/photo-1626491058156-2daaeea7f578?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxhdXRvJTIwcmlja3NoYXd8ZW58MHx8fHwxNzYyMDk3ODQ3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "auto rickshaw"
+    },
+    {
+      "id": "mobile-loan",
+      "description": "A person holding a smartphone.",
+      "imageUrl": "https://images.unsplash.com/photo-1658263795405-58dabd577a94?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxzbWFydHBob25lJTIwbW9iaWxlfGVufDB8fHx8MTc2MjA5ODQyMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "smartphone mobile"
+    }
+  ]
+}
