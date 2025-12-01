@@ -1,4 +1,4 @@
-import { tool } from 'genkit';
+import { ai } from './genkit';
 import { z } from 'zod';
 import { getAuthToken } from './context';
 
@@ -25,7 +25,7 @@ const fetchApi = async (endpoint: string, options: RequestInit = {}) => {
     return response.json();
 };
 
-export const calculateLoan = tool(
+export const calculateLoan = ai.defineTool(
     {
         name: 'calculateLoan',
         description: 'Calculates the monthly payment for a loan based on amount, months, and interest rate.',
@@ -41,6 +41,7 @@ export const calculateLoan = tool(
         }),
     },
     async ({ amount, months, rate }) => {
+        console.log('calculateLoan called with:', amount, months, rate);
         const monthlyRate = rate / 100 / 12;
         const monthlyPayment =
             (amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -months));
@@ -55,7 +56,7 @@ export const calculateLoan = tool(
     }
 );
 
-export const checkEligibility = tool(
+export const checkEligibility = ai.defineTool(
     {
         name: 'checkEligibility',
         description: 'Checks if a user is eligible for a loan.',
@@ -92,7 +93,7 @@ export const checkEligibility = tool(
     }
 );
 
-export const getLoanTypes = tool(
+export const getLoanTypes = ai.defineTool(
     {
         name: 'getLoanTypes',
         description: 'Returns a list of available loan types and their current starting interest rates.',
@@ -117,7 +118,7 @@ export const getLoanTypes = tool(
     }
 );
 
-export const applyForLoan = tool(
+export const applyForLoan = ai.defineTool(
     {
         name: 'applyForLoan',
         description: 'Applies for a loan for the user.',
@@ -160,31 +161,173 @@ export const applyForLoan = tool(
     }
 );
 
-export const getMyLoans = tool(
+export const get_customer_loans = ai.defineTool(
     {
-        name: 'getMyLoans',
-        description: 'Lists all active loans for the user.',
-        inputSchema: z.object({}),
+        name: 'get_customer_loans',
+        description: 'Fetches active loans for a customer. Requires customer_id.',
+        inputSchema: z.object({
+            customer_id: z.string().describe('The ID of the customer'),
+        }),
         outputSchema: z.array(
             z.object({
-                id: z.string(),
-                type: z.string(),
-                amount: z.number(),
+                loan_type: z.string(),
+                principal: z.number(),
+                outstanding_amount: z.number(),
+                emi_amount: z.number(),
                 status: z.string(),
             })
         ),
     },
-    async () => {
+    async ({ customer_id }) => {
+        console.log('get_customer_loans called with:', customer_id);
         try {
+            console.log('Fetching loans from backend...');
             const loans = await fetchApi('/loans/my-loans');
-            return loans.map((loan: any) => ({
-                id: loan.id.toString(),
-                type: loan.product?.title || 'Unknown',
-                amount: Number(loan.amount),
-                status: loan.status
-            }));
+            console.log('Loans fetched:', loans.length);
+            return loans.map((loan: any) => {
+                const principal = Number(loan.amount);
+                let outstanding_amount = principal;
+                let emi_amount = 0;
+
+                if (loan.repayments && loan.repayments.length > 0) {
+                    const pendingRepayments = loan.repayments.filter((r: any) => r.paymentStatus === 'PENDING');
+                    outstanding_amount = pendingRepayments.reduce((sum: number, r: any) => sum + Number(r.amountDue), 0);
+                    emi_amount = Number(loan.repayments[0].amountDue);
+                }
+
+                return {
+                    loan_type: loan.product?.title || 'Unknown Loan',
+                    principal: principal,
+                    outstanding_amount: parseFloat(outstanding_amount.toFixed(2)),
+                    emi_amount: parseFloat(emi_amount.toFixed(2)),
+                    status: loan.status
+                };
+            });
         } catch (error) {
             return [];
         }
+    }
+);
+
+export const get_emi_details = ai.defineTool(
+    {
+        name: 'get_emi_details',
+        description: 'Fetches the next EMI date and amount for a specific loan.',
+        inputSchema: z.object({
+            loan_id: z.string().describe('The ID of the loan'),
+        }),
+        outputSchema: z.object({
+            next_emi_date: z.string(),
+            amount: z.number(),
+            status: z.string(),
+        }),
+    },
+    async ({ loan_id }) => {
+        try {
+            // In a real app, fetch from DB using loan_id
+            // Mocking response for now
+            const today = new Date();
+            const nextMonth = new Date(today.setMonth(today.getMonth() + 1));
+
+            return {
+                next_emi_date: nextMonth.toISOString().split('T')[0],
+                amount: 2330.00,
+                status: 'PENDING'
+            };
+        } catch (error) {
+            throw new Error('Failed to fetch EMI details');
+        }
+    }
+);
+
+export const generate_payment_link = ai.defineTool(
+    {
+        name: 'generate_payment_link',
+        description: 'Generates a secure payment link for the customer.',
+        inputSchema: z.object({
+            customer_id: z.string(),
+            amount: z.number(),
+        }),
+        outputSchema: z.object({
+            payment_url: z.string(),
+            expiry: z.string(),
+        }),
+    },
+    async ({ customer_id, amount }) => {
+        // Mock payment link generation
+        const expiry = new Date(Date.now() + 30 * 60000); // 30 mins
+        return {
+            payment_url: `https://creditnow.com/pay/${customer_id}?amt=${amount}`,
+            expiry: expiry.toISOString()
+        };
+    }
+);
+
+export const schedule_notification = ai.defineTool(
+    {
+        name: 'schedule_notification',
+        description: 'Schedules a reminder notification for the user.',
+        inputSchema: z.object({
+            channel: z.string().describe('e.g., WhatsApp, SMS, Email'),
+            time: z.string().describe('ISO timestamp for the reminder'),
+            type: z.string().describe('Type of notification, e.g., reminder'),
+        }),
+        outputSchema: z.object({
+            success: z.boolean(),
+            message: z.string(),
+        }),
+    },
+    async ({ channel, time, type }) => {
+        // Mock scheduling
+        console.log(`Scheduled ${type} via ${channel} at ${time}`);
+        return {
+            success: true,
+            message: `Reminder scheduled for ${time} via ${channel}.`
+        };
+    }
+);
+
+export const get_account_statement = ai.defineTool(
+    {
+        name: 'get_account_statement',
+        description: 'Generates an account statement for a date range.',
+        inputSchema: z.object({
+            start_date: z.string().optional(),
+            end_date: z.string().optional(),
+        }),
+        outputSchema: z.object({
+            pdf_url: z.string(),
+            period: z.string(),
+        }),
+    },
+    async ({ start_date, end_date }) => {
+        // Mock PDF generation
+        return {
+            pdf_url: 'https://creditnow.com/docs/statement_2024.pdf',
+            period: `${start_date || 'Last 3 months'} to ${end_date || 'Today'}`
+        };
+    }
+);
+
+export const create_support_ticket = ai.defineTool(
+    {
+        name: 'create_support_ticket',
+        description: 'Creates a support ticket for the user.',
+        inputSchema: z.object({
+            issue_summary: z.string(),
+            category: z.string(),
+        }),
+        outputSchema: z.object({
+            ticket_id: z.string(),
+            sla: z.string(),
+        }),
+    },
+    async ({ issue_summary, category }) => {
+        // Mock ticket creation
+        const ticketId = 'TKT-' + Math.floor(Math.random() * 10000);
+        return {
+            ticket_id: ticketId,
+            sla: '24 hours'
+        };
     }
 );

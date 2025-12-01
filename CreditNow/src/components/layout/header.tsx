@@ -41,40 +41,42 @@ export function Header() {
           </nav>
         </div>
         {isClient && (
-        <div className="flex flex-1 items-center justify-end space-x-2">
-          <Button variant="ghost">Login</Button>
-          <Button className="hidden sm:inline-flex bg-accent text-accent-foreground hover:bg-accent/90">Apply Now</Button>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="md:hidden">
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle Menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right">
-              <div className="flex h-full flex-col">
-                <div className="flex items-center border-b pb-4">
-                  <Link href="/" className="flex items-center space-x-2">
-                    <Sparkles className="h-6 w-6 text-primary" />
-                    <span className="font-bold font-headline">CreditNow</span>
-                  </Link>
-                </div>
-                <nav className="mt-6 flex flex-grow flex-col gap-4">
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className="text-lg text-foreground/80 transition-colors hover:text-foreground"
-                    >
-                      {link.label}
+          <div className="flex flex-1 items-center justify-end space-x-2">
+            <Link href="/login">
+              <Button variant="ghost">Login</Button>
+            </Link>
+            <Button className="hidden sm:inline-flex bg-accent text-accent-foreground hover:bg-accent/90">Apply Now</Button>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon" className="md:hidden">
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Toggle Menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right">
+                <div className="flex h-full flex-col">
+                  <div className="flex items-center border-b pb-4">
+                    <Link href="/" className="flex items-center space-x-2">
+                      <Sparkles className="h-6 w-6 text-primary" />
+                      <span className="font-bold font-headline">CreditNow</span>
                     </Link>
-                  ))}
-                </nav>
-                <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90">Apply Now</Button>
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
+                  </div>
+                  <nav className="mt-6 flex flex-grow flex-col gap-4">
+                    {navLinks.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className="text-lg text-foreground/80 transition-colors hover:text-foreground"
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </nav>
+                  <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90">Apply Now</Button>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         )}
       </div>
     </header>
