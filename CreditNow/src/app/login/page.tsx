@@ -8,17 +8,34 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sparkles } from 'lucide-react';
+import { validateEmail } from '@/utils/validation';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [emailError, setEmailError] = useState('');
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+
+    const handleEmailBlur = () => {
+        const result = validateEmail(email);
+        setEmailError(result.isValid ? '' : result.error || '');
+    };
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+
+        // Validate email before submission
+        const emailValidation = validateEmail(email);
+        setEmailError(emailValidation.isValid ? '' : emailValidation.error || '');
+
+        if (!emailValidation.isValid) {
+            setError('Please fix the validation errors before submitting');
+            return;
+        }
+
         setLoading(true);
 
         try {
@@ -68,8 +85,14 @@ export default function LoginPage() {
                                 placeholder="m@example.com"
                                 required
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={(e) => {
+                                    setEmail(e.target.value);
+                                    setEmailError(''); // Clear error on change
+                                }}
+                                onBlur={handleEmailBlur}
+                                className={emailError ? 'border-red-500' : ''}
                             />
+                            {emailError && <p className="text-sm text-red-500">{emailError}</p>}
                         </div>
                         <div className="grid gap-2">
                             <div className="flex items-center">
