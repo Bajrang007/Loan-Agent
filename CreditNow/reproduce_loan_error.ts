@@ -59,17 +59,13 @@ async function main() {
         console.log('Value of minAmount:', product.minAmount);
 
         // Validate amount - mimicking the controller logic exactly
-        // The controller has: if (amount < product.minAmount || amount > product.maxAmount)
-        // Let's see if this throws or behaves weirdly
-        try {
-            // @ts-ignore
-            if (amount < product.minAmount || amount > product.maxAmount) {
-                console.log('Amount validation failed');
-            } else {
-                console.log('Amount validation passed');
-            }
-        } catch (e) {
-            console.error('Error during comparison:', e);
+        const minAmount = Number(product.minAmount);
+        const maxAmount = Number(product.maxAmount);
+
+        if (amount < minAmount || amount > maxAmount) {
+            throw new Error(`Loan amount must be between ${minAmount} and ${maxAmount}`);
+        } else {
+            console.log('Amount validation passed');
         }
 
         console.log('Creating application...');
