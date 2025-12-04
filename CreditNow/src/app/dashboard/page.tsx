@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Loader2, FileText, Upload, CreditCard, Plus, Clock, CheckCircle, AlertCircle } from 'lucide-react';
@@ -109,11 +109,23 @@ export default function DashboardPage() {
         }
     };
 
+    const searchParams = useSearchParams();
+
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
-            router.push('/login');
+            // Redirect to main page if not logged in
+            router.push('/');
             return;
+        }
+
+        // Check for query params to auto-open loan dialog
+        const openDialog = searchParams.get('openLoanDialog');
+        const type = searchParams.get('loanType');
+
+        if (openDialog === 'true' && type) {
+            setLoanType(type);
+            setLoanDialogOpen(true);
         }
 
         const fetchUser = async () => {
@@ -136,15 +148,17 @@ export default function DashboardPage() {
                 fetchDocuments();
             } catch (error) {
                 console.error(error);
+                // Remove invalid token and redirect to main page
                 localStorage.removeItem('token');
-                router.push('/login');
+                localStorage.removeItem('userName');
+                router.push('/');
             } finally {
                 setLoading(false);
             }
         };
 
         fetchUser();
-    }, [router]);
+    }, [router, searchParams]);
 
     const handleLogout = async () => {
         try {

@@ -52,6 +52,7 @@ export default function LoginPage() {
             }
 
             localStorage.setItem('token', data.token);
+            localStorage.setItem('userName', data.user.name);
             router.push('/dashboard');
         } catch (err: any) {
             setError(err.message);

@@ -13,7 +13,23 @@ import {
 import { Button } from "@/components/ui/button";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Bike, Car, Tractor, Smartphone, User, ArrowRight, Building, Gem, LandPlot, Briefcase, CarTaxiFront } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useEffect, useState } from 'react';
+
+// Define the type for a loan product
+interface LoanProduct {
+  id: string;
+  title: string;
+  subTitle: string;
+  icon: React.ReactNode;
+}
 
 const loanProducts = [
   {
@@ -93,10 +109,25 @@ const loanProducts = [
 
 export function ProductShowcase() {
   const [isClient, setIsClient] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<LoanProduct | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
+    // Check if user is logged in
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
   }, []);
+
+  const handleApplyNow = (productId: string) => {
+    if (isLoggedIn) {
+      // Redirect to dashboard with loan dialog open
+      window.location.href = `/dashboard?openLoanDialog=true&loanType=${productId}`;
+    } else {
+      // Redirect to signup
+      window.location.href = `/signup?loanType=${productId}`;
+    }
+  };
 
   return (
     <section id="products" className="w-full bg-muted/40 py-12 md:py-24 lg:py-32">
@@ -122,16 +153,64 @@ export function ProductShowcase() {
                   </div>
                 </CardHeader>
                 <CardContent className="flex-grow flex flex-col justify-end p-4 pt-0">
-                   {isClient && <div className="space-y-2">
-                      <Button variant="outline" className="w-full">Check Eligibility</Button>
-                      <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90">Apply Now</Button>
-                   </div>}
+                  {isClient && <div className="space-y-2">
+                    <Button variant="outline" className="w-full" onClick={() => setSelectedProduct(product)}>Check Eligibility</Button>
+                    <Button
+                      className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
+                      onClick={() => handleApplyNow(product.id)}
+                    >
+                      Apply Now
+                    </Button>
+                  </div>}
                 </CardContent>
               </Card>
             );
           })}
         </div>
       </div>
+
+      <Dialog open={!!selectedProduct} onOpenChange={(open) => !open && setSelectedProduct(null)}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Eligibility for {selectedProduct?.title}</DialogTitle>
+            <DialogDescription>
+              Check if you are eligible for our {selectedProduct?.title}.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <div className="h-2 w-2 rounded-full bg-primary" />
+                <span className="text-sm">Age: 21 - 60 years</span>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="h-2 w-2 rounded-full bg-primary" />
+                <span className="text-sm">Credit Score: 700+</span>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="h-2 w-2 rounded-full bg-primary" />
+                <span className="text-sm">Min. Monthly Income: ₹25,000</span>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="h-2 w-2 rounded-full bg-primary" />
+                <span className="text-sm">Employment: Salaried or Self-Employed</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <Button
+              className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
+              onClick={() => {
+                if (selectedProduct) {
+                  handleApplyNow(selectedProduct.id);
+                }
+              }}
+            >
+              Apply Now
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

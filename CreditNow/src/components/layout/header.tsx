@@ -14,11 +14,37 @@ const navLinks = [
 
 export function Header() {
   const [isClient, setIsClient] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
+    const token = localStorage.getItem('token');
+    const storedName = localStorage.getItem('userName');
+    if (token && storedName) {
+      setUserName(storedName);
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userName');
+    setUserName(null);
+    setIsLoggedIn(false);
+    window.location.href = '/';
+  };
+
+  const handleDashboardClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isLoggedIn) {
+      window.location.href = '/dashboard';
+    } else {
+      window.location.href = '/';
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -38,16 +64,32 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
+            <a
+              href="#"
+              onClick={handleDashboardClick}
+              className="text-foreground/60 transition-colors hover:text-foreground/80 cursor-pointer"
+            >
+              Dashboard
+            </a>
           </nav>
         </div>
         {isClient && (
           <div className="flex flex-1 items-center justify-end space-x-2">
-            <Link href="/login">
-              <Button variant="ghost">Login</Button>
-            </Link>
-            <Link href="/signup">
-              <Button className="hidden sm:inline-flex bg-accent text-accent-foreground hover:bg-accent/90">Apply Now</Button>
-            </Link>
+            {userName ? (
+              <div className="flex items-center gap-4">
+                <span className="text-sm font-medium">Welcome, {userName}</span>
+                <Button variant="ghost" onClick={handleLogout}>Logout</Button>
+              </div>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button variant="ghost">Login</Button>
+                </Link>
+                <Link href="/signup">
+                  <Button className="hidden sm:inline-flex bg-accent text-accent-foreground hover:bg-accent/90">Apply Now</Button>
+                </Link>
+              </>
+            )}
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon" className="md:hidden">
@@ -73,10 +115,24 @@ export function Header() {
                         {link.label}
                       </Link>
                     ))}
+                    <a
+                      href="#"
+                      onClick={handleDashboardClick}
+                      className="text-lg text-foreground/80 transition-colors hover:text-foreground cursor-pointer"
+                    >
+                      Dashboard
+                    </a>
                   </nav>
-                  <Link href="/signup" className="w-full">
-                    <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90">Apply Now</Button>
-                  </Link>
+                  {userName ? (
+                    <div className="mt-auto">
+                      <div className="mb-4 text-sm font-medium">Signed in as {userName}</div>
+                      <Button className="w-full" onClick={handleLogout}>Logout</Button>
+                    </div>
+                  ) : (
+                    <Link href="/signup" className="w-full">
+                      <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90">Apply Now</Button>
+                    </Link>
+                  )}
                 </div>
               </SheetContent>
             </Sheet>
