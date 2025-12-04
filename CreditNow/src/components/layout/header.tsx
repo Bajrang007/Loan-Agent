@@ -45,7 +45,9 @@ export function Header() {
             <Link href="/login">
               <Button variant="ghost">Login</Button>
             </Link>
-            <Button className="hidden sm:inline-flex bg-accent text-accent-foreground hover:bg-accent/90">Apply Now</Button>
+            <Link href="/signup">
+              <Button className="hidden sm:inline-flex bg-accent text-accent-foreground hover:bg-accent/90">Apply Now</Button>
+            </Link>
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon" className="md:hidden">
@@ -72,7 +74,9 @@ export function Header() {
                       </Link>
                     ))}
                   </nav>
-                  <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90">Apply Now</Button>
+                  <Link href="/signup" className="w-full">
+                    <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90">Apply Now</Button>
+                  </Link>
                 </div>
               </SheetContent>
             </Sheet>

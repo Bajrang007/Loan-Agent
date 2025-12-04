@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-const API_KEY = process.env.GOOGLE_GENAI_API_KEY || 'AIzaSyCMwokg6xUvpJk3l8vWa2dkthy8_Q353C4';
+const API_KEY = process.env.GOOGLE_GENAI_API_KEY || 'AIzaSyB6enMTlvvazAifsNZz3np0s_3h9MH7bWk';
 const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
 async function testKey() {

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
+import { ChatbotFab } from "@/components/chatbot-fab";
 
 export const metadata: Metadata = {
   title: 'CreditNow',
@@ -21,6 +22,7 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         {children}
+        <ChatbotFab />
         <Toaster />
       </body>
     </html>

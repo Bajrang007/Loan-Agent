@@ -2,7 +2,6 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Hero } from "@/components/hero";
 import { ProductShowcase } from "@/components/product-showcase";
-import { ChatbotFab } from "@/components/chatbot-fab";
 import { Offers } from "@/components/offers";
 import { FeaturesBenefits } from "@/components/features-benefits";
 import { Journey } from "@/components/journey";
@@ -24,7 +23,6 @@ export default function Home() {
         <Testimonials />
         <AppPromo />
       </main>
-      <ChatbotFab />
       <Footer />
     </div>
   );

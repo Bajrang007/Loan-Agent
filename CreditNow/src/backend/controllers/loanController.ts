@@ -29,20 +29,96 @@ export const createLoanProduct = async (req: AuthRequest, res: Response) => {
 // User: Apply for Loan
 export const applyForLoan = async (req: AuthRequest, res: Response) => {
     try {
-        const { productId, amount, tenure } = req.body;
+        const { productId, loanType, amount, tenure } = req.body;
         const userId = req.user!.id;
 
-        // Validate product
-        const product = await prisma.loanProduct.findUnique({ where: { id: productId } });
-        if (!product) {
-            return res.status(404).json({ message: 'Loan product not found' });
+        let product;
+
+        // If productId is provided, use it
+        if (productId) {
+            product = await prisma.loanProduct.findUnique({ where: { id: productId } });
+            if (!product) {
+                return res.status(404).json({ message: 'Loan product not found' });
+            }
+        }
+        // If loanType is provided, find or create a default product
+        else if (loanType) {
+            // Define default loan products
+            const defaultProducts: Record<string, any> = {
+                'personal': {
+                    title: 'Personal Loan',
+                    description: 'Quick personal loan for your needs',
+                    interestRate: 12.0,
+                    maxAmount: 500000,
+                    minAmount: 10000,
+                    tenureMonths: 60
+                },
+                'two-wheeler': {
+                    title: 'Two Wheeler Loan',
+                    description: 'Finance your dream bike',
+                    interestRate: 10.5,
+                    maxAmount: 150000,
+                    minAmount: 20000,
+                    tenureMonths: 36
+                },
+                'used-car': {
+                    title: 'Used Car Loan',
+                    description: 'Get your pre-owned car',
+                    interestRate: 11.5,
+                    maxAmount: 500000,
+                    minAmount: 50000,
+                    tenureMonths: 60
+                },
+                'tractor': {
+                    title: 'Tractor Loan',
+                    description: 'Finance agricultural equipment',
+                    interestRate: 9.5,
+                    maxAmount: 1000000,
+                    minAmount: 100000,
+                    tenureMonths: 84
+                },
+                'consumer-durable': {
+                    title: 'Consumer Durable Loan',
+                    description: 'Buy home appliances and electronics',
+                    interestRate: 13.0,
+                    maxAmount: 100000,
+                    minAmount: 5000,
+                    tenureMonths: 24
+                }
+            };
+
+            const productData = defaultProducts[loanType];
+            if (!productData) {
+                return res.status(400).json({ message: 'Invalid loan type' });
+            }
+
+            // Try to find existing product
+            product = await prisma.loanProduct.findFirst({
+                where: { title: productData.title }
+            });
+
+            // Create if doesn't exist
+            if (!product) {
+                product = await prisma.loanProduct.create({
+                    data: productData
+                });
+            }
+        } else {
+            return res.status(400).json({ message: 'Either productId or loanType is required' });
+        }
+
+        // Validate amount
+        if (amount < product.minAmount || amount > product.maxAmount) {
+            return res.status(400).json({
+                message: `Loan amount must be between ₹${product.minAmount} and ₹${product.maxAmount}`
+            });
         }
 
         // Create application
         const application = await prisma.loanApplication.create({
             data: {
                 userId,
-                productId,
+                productId: product.id,
                 amount,
                 tenure,
                 interestRate: product.interestRate
@@ -51,9 +127,11 @@ export const applyForLoan = async (req: AuthRequest, res: Response) => {
 
         res.status(201).json(application);
     } catch (error) {
+        console.error('Loan application error:', error);
         res.status(500).json({ message: 'Server error', error });
     }
 };
+
 
 // User: Get My Loans
 export const getMyLoans = async (req: AuthRequest, res: Response) => {

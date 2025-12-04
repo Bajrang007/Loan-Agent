@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -54,15 +55,16 @@ export function Hero() {
     },
   });
 
+  const router = useRouter();
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    toast({
-      title: "Application Submitted!",
-      description: "We have received your details and will get in touch shortly.",
-    });
-    form.reset();
+    const params = new URLSearchParams();
+    if (values.mobile) params.set('mobile', values.mobile);
+    if (values.loanType) params.set('loanType', values.loanType);
+
+    router.push(`/signup?${params.toString()}`);
   }
-  
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container grid gap-8 px-4 md:px-6 lg:grid-cols-2 lg:gap-16">
@@ -76,57 +78,57 @@ export function Hero() {
           <Card className="max-w-lg shadow-lg">
             <CardContent className="p-6">
               {isClient && (
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  <Tabs defaultValue="new" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="new">New Customer</TabsTrigger>
-                      <TabsTrigger value="existing">Existing Customer</TabsTrigger>
-                    </TabsList>
-                  </Tabs>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <Tabs defaultValue="new" className="w-full">
+                      <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="new">New Customer</TabsTrigger>
+                        <TabsTrigger value="existing">Existing Customer</TabsTrigger>
+                      </TabsList>
+                    </Tabs>
 
-                  <FormField
-                    control={form.control}
-                    name="loanType"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Select Loan Type</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormField
+                      control={form.control}
+                      name="loanType"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Select Loan Type</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="What are you looking for?" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="two-wheeler">Two Wheeler Loan</SelectItem>
+                              <SelectItem value="used-car">Used Car Loan</SelectItem>
+                              <SelectItem value="tractor">Tractor Loan</SelectItem>
+                              <SelectItem value="personal">Personal Loan</SelectItem>
+                              <SelectItem value="consumer-durable">Consumer Durable Loan</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="mobile"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Mobile Number</FormLabel>
                           <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="What are you looking for?" />
-                            </SelectTrigger>
+                            <Input placeholder="Enter your 10-digit mobile number" {...field} />
                           </FormControl>
-                          <SelectContent>
-                            <SelectItem value="two-wheeler">Two Wheeler Loan</SelectItem>
-                            <SelectItem value="used-car">Used Car Loan</SelectItem>
-                            <SelectItem value="tractor">Tractor Loan</SelectItem>
-                            <SelectItem value="personal">Personal Loan</SelectItem>
-                            <SelectItem value="consumer-durable">Consumer Durable Loan</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  <FormField
-                    control={form.control}
-                    name="mobile"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Mobile Number</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter your 10-digit mobile number" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90">Quick Apply</Button>
-                </form>
-              </Form>
+                    <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90">Quick Apply</Button>
+                  </form>
+                </Form>
               )}
             </CardContent>
           </Card>

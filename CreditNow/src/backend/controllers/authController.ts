@@ -83,3 +83,34 @@ export const login = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+export const getMe = async (req: any, res: Response) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: req.user.id },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                phone: true,
+                role: true,
+                createdAt: true
+            }
+        });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json(user);
+    } catch (error) {
+        console.error('Get Me error:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+export const logout = async (req: Request, res: Response) => {
+    // Since we are using JWTs, we can't really "invalidate" them without a blacklist.
+    // For now, we just send a success response and the client should remove the token.
+    res.json({ message: 'Logged out successfully' });
+};

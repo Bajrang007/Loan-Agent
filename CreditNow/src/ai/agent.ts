@@ -4,23 +4,29 @@ import { calculateLoan, checkEligibility, getLoanTypes, applyForLoan, get_custom
 import { getAuthToken } from './context';
 import jwt from 'jsonwebtoken';
 
-export const loanAgent = async (input: string) => {
-    const token = getAuthToken();
-    let customerId = 'Unknown';
-    if (token) {
-        try {
-            const decoded: any = jwt.decode(token);
-            customerId = decoded?.id || decoded?.userId || 'Unknown';
-        } catch (e) {
-            console.error('Failed to decode token', e);
+export const loanAgent = ai.defineFlow(
+    {
+        name: 'loanAgent',
+        inputSchema: z.string(),
+        outputSchema: z.string(),
+    },
+    async (input) => {
+        const token = getAuthToken();
+        let customerId = 'Unknown';
+        if (token) {
+            try {
+                const decoded: any = jwt.decode(token);
+                customerId = decoded?.id || decoded?.userId || 'Unknown';
+            } catch (e) {
+                console.error('Failed to decode token', e);
+            }
         }
-    }
 
-    console.log('Agent received input:', input);
-    console.log('Customer ID in context:', customerId);
+        console.log('Agent received input:', input);
+        console.log('Customer ID in context:', customerId);
 
-    const { text } = await ai.generate({
-        prompt: `You are TIA, a helpful and knowledgeable virtual assistant for CreditNow, a loan provider.
+        const { text } = await ai.generate({
+            prompt: `You are TIA, a helpful and knowledgeable virtual assistant for CreditNow, a loan provider.
   Your goal is to assist users with their loan-related queries, calculate payments, check eligibility, and apply for loans.
   
   Current Session Context:
@@ -55,7 +61,8 @@ export const loanAgent = async (input: string) => {
   If you cannot answer a question using the tools or general knowledge, advise the user to contact support.
   
   User Input: ${input}`,
-        tools: [calculateLoan, checkEligibility, getLoanTypes, applyForLoan, get_customer_loans, get_emi_details, generate_payment_link, schedule_notification, get_account_statement, create_support_ticket],
-    });
-    return text;
-};
+            tools: [calculateLoan, checkEligibility, getLoanTypes, applyForLoan, get_customer_loans, get_emi_details, generate_payment_link, schedule_notification, get_account_statement, create_support_ticket],
+        });
+        return text;
+    }
+);

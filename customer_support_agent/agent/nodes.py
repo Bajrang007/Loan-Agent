@@ -6,7 +6,10 @@ import os
 
 # Initialize LLM
 # Note: Ensure GOOGLE_API_KEY is set in .env
-llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
+llm = ChatGoogleGenerativeAI(
+    model="gemini-2.0-flash-exp",
+    google_api_key=os.getenv("GOOGLE_API_KEY")
+)
 
 tools = [lookup_policy, lookup_order]
 llm_with_tools = llm.bind_tools(tools)

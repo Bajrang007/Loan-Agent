@@ -16,7 +16,24 @@ const storage = multer.diskStorage({
     }
 });
 
-export const upload = multer({ storage });
+// File filter to allow only specific image types
+const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+    const allowedTypes = /jpeg|jpg|png/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+
+    if (mimetype && extname) {
+        return cb(null, true);
+    } else {
+        cb(new Error('Only .jpg, .jpeg, and .png files are allowed!'));
+    }
+};
+
+export const upload = multer({
+    storage,
+    fileFilter,
+    limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+});
 
 // User: Upload Document
 export const uploadDocument = async (req: AuthRequest, res: Response) => {
@@ -25,13 +42,13 @@ export const uploadDocument = async (req: AuthRequest, res: Response) => {
             return res.status(400).json({ message: 'No file uploaded' });
         }
 
-        const { type } = req.body; // PAN, Aadhaar, etc.
+        const { documentType, type } = req.body; // Accept both for compatibility
         const userId = req.user!.id;
 
         const document = await prisma.userDocument.create({
             data: {
                 userId,
-                documentType: type,
+                documentType: documentType || type, // Use documentType if available, fallback to type
                 documentUrl: req.file.path,
                 status: 'PENDING'
             }
@@ -39,6 +56,7 @@ export const uploadDocument = async (req: AuthRequest, res: Response) => {
 
         res.status(201).json(document);
     } catch (error) {
+        console.error('Document upload error:', error);
         res.status(500).json({ message: 'Server error', error });
     }
 };
@@ -79,6 +97,21 @@ export const getPendingDocuments = async (req: AuthRequest, res: Response) => {
         });
         res.json(documents);
     } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
+
+// User: Get My Documents
+export const getMyDocuments = async (req: AuthRequest, res: Response) => {
+    try {
+        const userId = req.user!.id;
+        const documents = await prisma.userDocument.findMany({
+            where: { userId },
+            orderBy: { uploadedAt: 'desc' }
+        });
+        res.json(documents);
+    } catch (error) {
+        console.error('Get documents error:', error);
         res.status(500).json({ message: 'Server error', error });
     }
 };
